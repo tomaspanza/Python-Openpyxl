@@ -44,9 +44,6 @@ def agregar_empleado():
     print("Empleado se agrego con éxito!!")
 
 
-mostrar_menu()
-
-
 # Modificar empleado
 
 
@@ -58,11 +55,32 @@ def modificar_empleado():
 
 
 def borrar_empleado():
-    pass
+    legajo_borrar = input("Ingrese el número de legajo del empleado a borrar: ")
+    encontrado = False
+
+    for row_index, row in enumerate(
+        sheet.iter_rows(min_row=2, values_only=True), start=2
+    ):
+        if row[0] == legajo_borrar:
+            encontrado = True
+            print(f"Empleado a borrar: {row}")
+            confirmar = input(
+                "¿Está seguro de que desea borrar este empleado? (S/N): "
+            ).lower()
+            if confirmar == "s":
+                sheet.delete_rows(row_index)
+                guardar_archivo()
+                print("Empleado borrado con éxito.")
+            else:
+                print("Borrado cancelado.")
+            break
+
+    if not encontrado:
+        print("Empleado no encontrado.")
 
 
 # Verificar si el archivo Excel ya existe
-if os.path.exists("datos.xlsx"):
+if os.path.exists("Empleados.xlsx"):
     workbook = openpyxl.load_workbook("Empleados.xlsx")
     sheet = workbook.active
 else:
