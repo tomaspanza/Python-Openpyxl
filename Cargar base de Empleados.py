@@ -48,7 +48,47 @@ def agregar_empleado():
 
 
 def modificar_empleado():
-    pass
+    legajo_modificar = input("Ingrese el número de legajo del empleado a modificar: ")
+    encontrado = False
+
+    for row_index, row in enumerate(
+        sheet.iter_rows(min_row=2, values_only=True), start=2
+    ):
+        if row[0] == legajo_modificar:
+            encontrado = True
+            print(f"Empleado encontrado: {row}")
+            nuevo_nombre = input("Ingrese el nuevo nombre: ")
+            nuevo_edad = int(input("Ingrese la nueva edad: "))
+            nuevo_area = input("Ingrese la nueva área: ")
+            nueva_horas_diarias = float(input("Ingrese las nuevas horas diarias: "))
+            nuevo_pago_por_hora = float(input("Ingrese el nuevo pago por hora: "))
+            nuevos_dias_trabajados = int(input("Ingrese los nuevos días trabajados: "))
+            nuevo_sueldo_mensual = (
+                nueva_horas_diarias * nuevo_pago_por_hora * nuevos_dias_trabajados
+            )
+
+            # Crear una nueva lista con los valores actualizados
+            nueva_fila = [
+                row[0],
+                nuevo_nombre,
+                nuevo_edad,
+                nuevo_area,
+                nueva_horas_diarias,
+                nuevo_pago_por_hora,
+                nuevos_dias_trabajados,
+                nuevo_sueldo_mensual,
+            ]
+
+            # Reemplazar la fila en la hoja con los nuevos valores
+            for col_index, value in enumerate(nueva_fila, start=1):
+                sheet.cell(row=row_index, column=col_index, value=value)
+
+            guardar_archivo()
+            print("Empleado modificado con éxito.")
+            break
+
+    if not encontrado:
+        print("Empleado no encontrado.")
 
 
 # Borrar empleado
